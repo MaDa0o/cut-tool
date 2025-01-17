@@ -74,6 +74,9 @@ int main(int argc, char* argv[]){
 		if(flag.substr(0,2) == "-f"){
 			colnum = std::stoi(flag.substr(2));
 		}
+		else if(flag.substr(0,2) == "-d"){
+			Delim = flag[2];
+		}
 	}
 
 	for(int i = 0;i<file_content.size();i++){
