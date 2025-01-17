@@ -25,6 +25,45 @@ bool Read_File(std::string file_path, std::vector<std::string>& file_content){
 	return true;
 }
 
+bool generateFieldList(std::string list, std::vector<int>& field_list){
+	char delim;
+
+	if(list.find(' ') != std::string::npos){
+		list.push_back(' ');
+		delim = ' ';
+	}else{
+		list.push_back(',');
+		delim = ',';
+	}
+
+	try{
+		while(!list.empty()){
+			int num = stoi(list.substr(0,list.find(delim)));
+			list = list.substr(list.find(delim)+1);
+			field_list.push_back(num);
+		}
+	}catch(...){
+		std::cerr<<"Problem in field_list"<<"\nPlease input in the correct format\n";
+		return false;
+	}
+	return true;
+}
+
+void FragmentContent(std::vector<std::string> content, std::vector<std::vector<std::string>>& fragment,const char delim){
+
+	for(int i = 0;i<content.size();i++){
+		std::string line = content[i];
+		std::string col;
+		line.push_back(delim);
+		while(!line.empty()){
+			col = line.substr(0,line.find(delim));
+			line = line.substr(line.find(delim)+1);
+			fragment[i].push_back(col);
+		}
+	}
+
+}
+
 int main(int argc, char* argv[]){
 
 	if(argc == 1){
@@ -67,28 +106,40 @@ int main(int argc, char* argv[]){
 	// }
 
 	char Delim = '\t';
-	int colnum;
+	std::vector<int> field_list;
 
 	for(int i=0;i<n;i++){
 		std::string flag = flag_list[i];
 		if(flag.substr(0,2) == "-f"){
-			colnum = std::stoi(flag.substr(2));
+			if(!generateFieldList(flag.substr(2),field_list)){
+				return 3;
+			}
 		}
 		else if(flag.substr(0,2) == "-d"){
 			Delim = flag[2];
 		}
 	}
 
-	for(int i = 0;i<file_content.size();i++){
-		std::string line = file_content[i];
-		std::string col;
-		int inc = 0;
-		while(inc != colnum){
-			col = line.substr(0,line.find(Delim));
-			line = line.substr(line.find(Delim)+1);
-			inc++;
+	// std::cout<<"Field_list is as follows:\n";
+	// for(int i = 0;i<field_list.size();i++){
+	// 	std::cout<<field_list[i]<<"\t";
+	// }
+	// std::cout<<"\n";
+
+	std::vector<std::vector<std::string>> content_fragmented(file_content.size());
+	FragmentContent(file_content, content_fragmented, Delim);
+
+	for(int i = 0;i<content_fragmented.size();i++){
+		for(int j = 0;j<field_list.size();j++){
+			if(field_list[j]<=content_fragmented[0].size()){
+				std::cout<<content_fragmented[i][field_list[j]-1]<<Delim;
+			}
+			else{
+				std::cerr<<"\ninvalid fields\n";
+				return 4;
+			}
 		}
-		std::cout<<col<<"\n";
+		std::cout<<"\n";
 	}
 
 	return 0;

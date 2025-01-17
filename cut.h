@@ -6,4 +6,8 @@
 
 bool Read_File(std::string,std::vector<std::string>&);
 
+bool GenerateFieldList(std::string, std::vector<int>&);
+
+void FragmentContent(std::vector<std::string>, std::vector<std::vector<std::string>>&, const char);
+
 int main(int ,char**);
