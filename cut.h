@@ -10,4 +10,6 @@ bool GenerateFieldList(std::string, std::vector<int>&);
 
 void FragmentContent(std::vector<std::string>, std::vector<std::vector<std::string>>&, const char);
 
+void Read_stdinp(std::vector<std::string>&);
+
 int main(int ,char**);

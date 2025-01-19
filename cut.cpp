@@ -64,6 +64,16 @@ void FragmentContent(std::vector<std::string> content, std::vector<std::vector<s
 
 }
 
+void Read_stdinp(std::vector<std::string>& file_content){
+	std::string t;
+	while(getline(std::cin,t)){
+		if(t.empty()){
+			break;
+		}
+		file_content.push_back(t);
+	}
+}
+
 int main(int argc, char* argv[]){
 
 	if(argc == 1){
@@ -72,8 +82,13 @@ int main(int argc, char* argv[]){
 	}
 
 	std::string file_path = "";
-	file_path = argv[argc - 1];
-	int n = argc-2;
+	int n;
+	if(*argv[argc-1] != '-'){
+		file_path = argv[argc - 1];
+		n = argc-2;
+	}else{
+		n = argc - 1;
+	}
 	char* flag_list[n];
 	for(int i = 0; i < n ; i++){
 		flag_list[i] = argv[n-i];
@@ -94,9 +109,8 @@ int main(int argc, char* argv[]){
 			return 2;
 		}
 	}else{
-		//to be implemented
-		std::cout<<"no file specified\n";
-		return 1;
+		//Take input from standard input
+		Read_stdinp(file_content);
 	}
 
 	//Displaying file content
